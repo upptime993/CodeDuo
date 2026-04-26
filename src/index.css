@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;700;800&family=Lexend:wght@700&family=Space+Grotesk:wght@500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-display: "Plus Jakarta Sans", sans-serif;
+  --font-label: "Lexend", sans-serif;
+  --font-mono: "Space Grotesk", ui-monospace, SFMono-Regular, monospace;
+
+  /* Custom Candy Code Colors */
+  --color-brand-background: #0e131f;
+  --color-brand-surface: #1a1f2c;
+  --color-brand-surface-high: #252a36;
+  --color-brand-surface-highest: #303542;
+  
+  --color-brand-primary: #c3f377;
+  --color-brand-on-primary: #223600;
+  
+  --color-brand-secondary: #f5b6c4;
+  --color-brand-on-secondary: #4d232f;
+  
+  --color-brand-tertiary: #f1dbff;
+  --color-brand-on-tertiary: #4a0080;
+}
+
+@layer base {
+  body {
+    @apply bg-brand-background text-[#dee2f3] antialiased;
+  }
+}
+
+.squishy-btn-pink {
+  @apply bg-brand-secondary text-brand-on-secondary shadow-[0_4px_0_0_#D998A7] active:shadow-none active:translate-y-[4px] transition-all;
+}
+
+.squishy-btn-lime {
+  @apply bg-brand-primary text-brand-on-primary shadow-[0_4px_0_0_#86ab4b] active:shadow-none active:translate-y-[4px] transition-all;
+}
+
+.surface-card {
+  @apply bg-[#22283A] border border-[#2E3650] rounded-2xl;
+}
