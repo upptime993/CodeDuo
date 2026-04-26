@@ -4,20 +4,21 @@ import TopNav from './components/TopNav';
 import BottomNav from './components/BottomNav';
 import HomeView from './views/HomeView';
 import ProfileView from './views/ProfileView';
-import ShopView from './views/ShopView';
 import LessonView from './views/LessonView';
 import SplashView from './views/SplashView';
+import AdminView from './views/AdminView';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState('home');
   const [onboarding, setOnboarding] = useState(true);
   const [isLessonActive, setIsLessonActive] = useState(false);
+  const [activeLevelId, setActiveLevelId] = useState<string | null>(null);
 
   if (onboarding) {
     return <SplashView onStart={() => setOnboarding(false)} />;
   }
 
-  if (isLessonActive) {
+  if (isLessonActive && activeLevelId) {
     return (
       <AnimatePresence mode="wait">
         <motion.div
@@ -27,7 +28,7 @@ export default function App() {
           exit={{ opacity: 0, x: -100 }}
           className="fixed inset-0 z-[100]"
         >
-          <LessonView onExit={() => setIsLessonActive(false)} />
+          <LessonView levelId={activeLevelId} onExit={() => setIsLessonActive(false)} />
         </motion.div>
       </AnimatePresence>
     );
@@ -46,24 +47,15 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               onClick={(e) => {
-                // If it's the gift node or start node, launch lesson
                 const target = e.target as HTMLElement;
-                if (target.closest('button')) {
+                const button = target.closest('button');
+                if (button && button.dataset.levelId) {
+                  setActiveLevelId(button.dataset.levelId);
                   setIsLessonActive(true);
                 }
               }}
             >
               <HomeView />
-            </motion.div>
-          )}
-          {currentTab === 'shop' && (
-            <motion.div
-              key="shop"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-            >
-              <ShopView />
             </motion.div>
           )}
           {currentTab === 'profile' && (
@@ -74,6 +66,16 @@ export default function App() {
               exit={{ opacity: 0, y: -20 }}
             >
               <ProfileView />
+            </motion.div>
+          )}
+          {currentTab === 'admin' && (
+            <motion.div
+              key="admin"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+            >
+              <AdminView />
             </motion.div>
           )}
           {currentTab === 'super' && (
@@ -93,12 +95,12 @@ export default function App() {
                 </motion.div>
               </div>
               <h1 className="text-2xl font-extrabold mb-4">Super Quest</h1>
-              <p className="text-slate-400 mb-8 max-w-xs">You're already browsing the premium features. Check out the shop for more info!</p>
+              <p className="text-slate-400 mb-8 max-w-xs">Fitur premium akan datang!</p>
               <button 
-                onClick={() => setCurrentTab('shop')}
+                onClick={() => setCurrentTab('home')}
                 className="squishy-btn-lime px-8 py-4 rounded-2xl font-bold"
               >
-                Go to Shop
+                Kembali
               </button>
             </motion.div>
           )}
