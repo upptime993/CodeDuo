@@ -1,0 +1,80 @@
+{
+  "chapters": [
+    {
+      "title": "Pengenalan HTML, CSS, dan JS",
+      "description": "Pelajari pondasi dasar membuat website dengan HTML, mengatur tampilan dengan CSS, dan membuatnya interaktif dengan JavaScript.",
+      "order": 1,
+      "levels": [
+        {
+          "title": "Apa itu HTML?",
+          "type": "material",
+          "order": 1,
+          "material": {
+            "content": "<h3>Hai, Calon Developer! 👋</h3><p>Bayangin bikin website itu kayak bangun rumah. <strong>HTML</strong> (HyperText Markup Language) itu ibarat fondasi dan batu batanya.</p><p>HTML bertugas untuk ngasih struktur konten di website kamu. Mau nambahin teks, gambar, atau link? Semuanya pakai HTML!</p><ul><li><code>&lt;h1&gt;</code> buat judul yang gede banget.</li><li><code>&lt;p&gt;</code> buat nulis paragraf biasa.</li><li><code>&lt;img&gt;</code> buat masukin gambar kucing kesayangan kamu.</li></ul><p>Gampang kan? Yuk kita lanjut uji pemahaman kamu!</p>"
+          }
+        },
+        {
+          "title": "Kuis HTML Dasar",
+          "type": "quiz",
+          "order": 2,
+          "quiz": {
+            "question": "Kalau diibaratkan membangun rumah, peran HTML itu seperti apa sih?",
+            "options": [
+              "Cat dan dekorasi rumah",
+              "Sistem listrik dan air",
+              "Batu bata dan fondasi struktur",
+              "Atap rumah"
+            ],
+            "correctAnswer": "Batu bata dan fondasi struktur"
+          }
+        },
+        {
+          "title": "Bikin Cantik dengan CSS",
+          "type": "material",
+          "order": 3,
+          "material": {
+            "content": "<h3>Waktunya Menghias! 🎨</h3><p>Kalau HTML itu batu batanya, <strong>CSS</strong> (Cascading Style Sheets) itu ibarat cat, interior, dan dekorasi rumahnya.</p><p>Website tanpa CSS bakal keliatan kaku banget (cuma teks item putih). Dengan CSS, kamu bisa atur warna, ukuran, jarak, bahkan animasi!</p><p>Contohnya, kamu bisa bikin teks jadi warna merah pake kode: <code>color: red;</code>. Keren kan?</p>"
+          }
+        },
+        {
+          "title": "Kuis Fungsi CSS",
+          "type": "quiz",
+          "order": 4,
+          "quiz": {
+            "question": "Manakah yang merupakan fungsi utama dari CSS di sebuah website?",
+            "options": [
+              "Menyimpan data pengguna di database",
+              "Mengatur tampilan, warna, dan gaya website",
+              "Membuat website menjadi interaktif kalau diklik",
+              "Mengirim email ke pengguna"
+            ],
+            "correctAnswer": "Mengatur tampilan, warna, dan gaya website"
+          }
+        },
+        {
+          "title": "Bikin Hidup dengan JS",
+          "type": "material",
+          "order": 5,
+          "material": {
+            "content": "<h3>It's Alive! ⚡</h3><p>Terakhir, ada <strong>JavaScript</strong> (JS). Kalau diibaratkan rumah lagi, JS itu sistem listrik, air, dan pintu otomatisnya.</p><p>JS bikin website kamu jadi hidup dan interaktif. Misalnya:</p><ul><li>Munculin pop-up \"Selamat Datang!\"</li><li>Ngecek form login kosong atau nggak.</li><li>Ambil data dari server tanpa perlu reload halaman.</li></ul><p>Intinya, JS itu otaknya website kamu!</p>"
+          }
+        },
+        {
+          "title": "Kuis Pemahaman JS",
+          "type": "quiz",
+          "order": 6,
+          "quiz": {
+            "question": "Kalau kamu mau bikin tombol yang kalau diklik bisa memunculkan pop-up alert, bahasa apa yang kamu gunakan?",
+            "options": [
+              "HTML",
+              "CSS",
+              "JavaScript",
+              "Python"
+            ],
+            "correctAnswer": "JavaScript"
+          }
+        }
+      ]
+    }
+  ]
+}

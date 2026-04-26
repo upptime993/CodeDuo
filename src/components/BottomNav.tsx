@@ -1,4 +1,4 @@
-import { Home, ShoppingBag, Stars, User } from 'lucide-react';
+import { Home, Stars, User, Database } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface BottomNavProps {
@@ -8,10 +8,10 @@ interface BottomNavProps {
 
 export default function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
   const tabs = [
-    { id: 'home', label: 'Home', icon: Home },
-    { id: 'shop', label: 'Shop', icon: ShoppingBag },
+    { id: 'home', label: 'Beranda', icon: Home },
     { id: 'super', label: 'Super', icon: Stars },
-    { id: 'profile', label: 'You', icon: User },
+    { id: 'profile', label: 'Profil', icon: User },
+    { id: 'admin', label: 'Admin', icon: Database },
   ];
 
   return (

@@ -1,11 +1,51 @@
-import { X, Heart, Code2, Play } from 'lucide-react';
+import { X, Heart, CheckCircle } from 'lucide-react';
 import { motion } from 'motion/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-export default function LessonView({ onExit }: { onExit: () => void }) {
+export default function LessonView({ levelId, onExit }: { levelId: string, onExit: () => void }) {
   const [selected, setSelected] = useState<string | null>(null);
-  
-  const options = ['2', '*', '+', '10'];
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState<'idle' | 'correct' | 'wrong'>('idle');
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const res = await fetch(`/api/levels/${levelId}/content`);
+        const json = await res.json();
+        setData(json);
+      } catch (error) {
+        console.error("Error fetching lesson content:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchContent();
+  }, [levelId]);
+
+  if (loading) {
+    return <div className="bg-brand-background min-h-screen flex items-center justify-center font-bold text-white">Memuat Pelajaran...</div>;
+  }
+
+  if (!data || !data.level) {
+    return <div className="bg-brand-background min-h-screen flex items-center justify-center text-red-500 font-bold">Pelajaran tidak ditemukan.</div>;
+  }
+
+  const isMaterial = data.level.type === 'material';
+  const isQuiz = data.level.type === 'quiz';
+
+  const handleCheck = () => {
+    if (isQuiz) {
+      if (selected === data.content.correctAnswer) {
+        setStatus('correct');
+      } else {
+        setStatus('wrong');
+      }
+    } else {
+      // Just complete material
+      setStatus('correct');
+    }
+  };
 
   return (
     <div className="bg-brand-background min-h-screen flex flex-col font-body">
@@ -15,90 +55,92 @@ export default function LessonView({ onExit }: { onExit: () => void }) {
           <X size={24} />
         </button>
         <div className="flex-1 bg-brand-surface-high h-3 rounded-full overflow-hidden border border-[#2E3650]">
-          <div className="bg-brand-primary h-full w-[65%] rounded-full relative shadow-[0_0_8px_rgba(195,243,119,0.5)]"></div>
+          <div className="bg-brand-primary h-full w-[10%] rounded-full relative shadow-[0_0_8px_rgba(195,243,119,0.5)]"></div>
         </div>
         <div className="flex items-center gap-1 text-brand-secondary font-bold">
           <Heart size={20} fill="currentColor" />
-          <span>4</span>
+          <span>5</span>
         </div>
       </header>
 
       {/* Content */}
       <main className="flex-1 px-5 py-6 max-w-2xl mx-auto w-full flex flex-col gap-8">
-        <section className="flex flex-col gap-6">
-          <h1 className="font-display font-extrabold text-2xl">Complete the program</h1>
-          
-          <div className="flex items-start gap-4">
-            <div className="w-16 h-16 shrink-0 bg-[#22283A] rounded-2xl overflow-hidden border-2 border-[#2E3650] shadow-lg flex items-center justify-center p-2">
-              <img src="https://api.dicebear.com/7.x/bottts/svg?seed=QuestBot" alt="Bot" className="w-full h-full" />
-            </div>
-            <div className="relative bg-[#22283A] border-2 border-[#2E3650] rounded-2xl rounded-tl-none p-4 shadow-lg flex-1">
-              <div className="absolute -left-[9px] top-0 w-4 h-4 bg-[#22283A] border-l-2 border-t-2 border-[#2E3650] transform rotate-[-45deg] origin-top-right"></div>
-              <p className="text-sm font-medium leading-relaxed">
-                Double the value of the <span className="text-brand-tertiary-dim font-mono bg-black/40 px-1.5 py-0.5 rounded">water</span> variable.
-              </p>
-            </div>
-          </div>
-        </section>
+        {isMaterial && (
+          <section className="flex flex-col gap-6">
+            <h1 className="font-display font-extrabold text-2xl">{data.level.title}</h1>
+            <div
+              className="prose prose-invert max-w-none text-slate-300 bg-[#1C2230] p-6 rounded-2xl border border-[#2E3650] shadow-lg leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: data.content.content }}
+            />
+          </section>
+        )}
 
-        {/* Editor */}
-        <section className="bg-[#1C2230] rounded-2xl shadow-[0_8px_0_0_rgba(0,0,0,0.4)] border border-[#2E3650] overflow-hidden flex flex-col">
-          <div className="bg-[#252a36] px-4 py-2 border-b border-[#2E3650] flex items-center gap-2">
-            <Code2 size={14} className="text-brand-primary" />
-            <span className="font-label text-[10px] text-slate-400 uppercase tracking-widest">main.py</span>
-          </div>
-          <div className="p-6 font-mono text-sm leading-8 flex flex-col">
-            <div className="flex items-center gap-4">
-              <span className="text-slate-600 w-4 text-right select-none">1</span>
-              <div><span className="text-brand-primary">water</span> <span className="text-brand-secondary">=</span> <span className="text-brand-tertiary">5</span></div>
-            </div>
-            <div className="flex items-center gap-4">
-              <span className="text-slate-600 w-4 text-right select-none">2</span>
-              <div className="flex items-center gap-2">
-                <span className="text-brand-primary">water</span> <span className="text-brand-secondary">=</span> <span className="text-brand-primary">water</span> <span className="text-brand-secondary">*</span>
-                <div className={`
-                  min-w-[50px] h-9 rounded-lg border-2 border-dashed flex items-center justify-center transition-all bg-[#0e131f]/50
-                  ${selected ? 'border-brand-primary border-solid bg-brand-primary/10' : 'border-[#2E3650]'}
-                `}>
-                  {selected && <span className="text-brand-primary font-bold">{selected}</span>}
+        {isQuiz && (
+          <>
+            <section className="flex flex-col gap-6">
+              <h1 className="font-display font-extrabold text-2xl">{data.level.title}</h1>
+
+              <div className="flex items-start gap-4">
+                <div className="w-16 h-16 shrink-0 bg-[#22283A] rounded-2xl overflow-hidden border-2 border-[#2E3650] shadow-lg flex items-center justify-center p-2">
+                  <img src="https://api.dicebear.com/7.x/bottts/svg?seed=TeacherBot" alt="Bot" className="w-full h-full" />
+                </div>
+                <div className="relative bg-[#22283A] border-2 border-[#2E3650] rounded-2xl rounded-tl-none p-4 shadow-lg flex-1">
+                  <div className="absolute -left-[9px] top-0 w-4 h-4 bg-[#22283A] border-l-2 border-t-2 border-[#2E3650] transform rotate-[-45deg] origin-top-right"></div>
+                  <p className="text-sm font-medium leading-relaxed">
+                    {data.content.question}
+                  </p>
                 </div>
               </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <span className="text-slate-600 w-4 text-right select-none">3</span>
-              <div><span className="text-brand-tertiary">print</span>(<span className="text-brand-secondary">"water:"</span>, water)</div>
-            </div>
-          </div>
-        </section>
+            </section>
 
-        {/* Tokens */}
-        <section className="grid grid-cols-4 gap-3 mt-4">
-          {options.map((opt) => (
-            <button
-              key={opt}
-              onClick={() => setSelected(opt === selected ? null : opt)}
-              className={`
-                h-14 rounded-xl font-mono font-bold text-lg border-2 transition-all active:scale-95
-                ${selected === opt ? 'bg-brand-surface-highest border-brand-primary text-brand-primary opacity-50 cursor-not-allowed' : 'bg-[#22283A] border-[#2E3650] text-white hover:border-[#3D4866]'}
-                shadow-[0_4px_0_0_#151A26] active:translate-y-1 active:shadow-none
-              `}
-            >
-              {opt}
-            </button>
-          ))}
-        </section>
+            {/* Options */}
+            <section className="flex flex-col gap-3 mt-4">
+              {data.content.options.map((opt: string) => (
+                <button
+                  key={opt}
+                  onClick={() => {
+                    setSelected(opt);
+                    setStatus('idle'); // Reset status on select
+                  }}
+                  className={`
+                    w-full text-left px-6 py-4 rounded-xl font-bold text-lg border-2 transition-all active:scale-95
+                    ${selected === opt ? 'bg-brand-primary/10 border-brand-primary text-brand-primary' : 'bg-[#22283A] border-[#2E3650] text-white hover:border-[#3D4866]'}
+                    shadow-[0_4px_0_0_#151A26] active:translate-y-1 active:shadow-none
+                  `}
+                >
+                  {opt}
+                </button>
+              ))}
+            </section>
+          </>
+        )}
       </main>
 
       {/* Footer CTA */}
-      <footer className="p-5 bg-brand-background border-t border-[#2E3650] pb-safe">
+      <footer className={`p-5 border-t pb-safe transition-colors ${status === 'correct' ? 'bg-brand-primary/20 border-brand-primary' : status === 'wrong' ? 'bg-red-500/20 border-red-500' : 'bg-brand-background border-[#2E3650]'}`}>
+        {status === 'correct' && (
+          <div className="mb-4 flex items-center gap-2 text-brand-primary font-bold">
+            <CheckCircle size={24} />
+            <span>Jawaban kamu benar!</span>
+          </div>
+        )}
+        {status === 'wrong' && (
+          <div className="mb-4 flex items-center gap-2 text-red-500 font-bold">
+            <X size={24} />
+            <span>Kurang tepat. Coba lagi ya!</span>
+          </div>
+        )}
+
         <button 
-          disabled={!selected}
+          onClick={status === 'correct' ? onExit : handleCheck}
+          disabled={isQuiz && !selected}
           className={`
             w-full py-4 rounded-2xl font-bold uppercase tracking-widest text-sm transition-all
-            ${selected ? 'squishy-btn-pink opacity-100' : 'bg-[#22283A] text-slate-500 cursor-not-allowed opacity-50'}
+            ${isQuiz && !selected ? 'bg-[#22283A] text-slate-500 cursor-not-allowed opacity-50' :
+              status === 'correct' ? 'squishy-btn-lime text-black' : 'squishy-btn-lime text-black opacity-100'}
           `}
         >
-          Check
+          {status === 'correct' ? 'Lanjut' : isMaterial ? 'Selesai Baca' : 'Cek'}
         </button>
       </footer>
     </div>
